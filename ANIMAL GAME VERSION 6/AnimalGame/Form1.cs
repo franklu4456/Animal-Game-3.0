@@ -605,78 +605,106 @@ namespace AnimalGame
             }
         }
 
+        /// <summary>
+        /// Override of the computer's OnPaint subprogram
+        /// Drawing all the graphics of the game.
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnPaint(PaintEventArgs e)
         {
-
+            //Integers to store the x and y coordinates to draw the map..
+            //They start at 0.
             int xLocation = 0;
             int yLocation = 0;
 
 
+            //If the player is not in battle, then draw the map.
             if (!player.InBattle)
             {
+                //Create a for loop that runs for every column.
                 for (int j = 0; j < theWorld.Map.GetLength(1); j++)
                 {
+                    //Create a for loop that runs for every row.
                     for (int i = 0; i < theWorld.Map.GetLength(0); i++)
                     {
+                        //Create a temporary rectangle with the x and y locations and the width/height of the tile.
                         RectangleF tempRectangle = new RectangleF((float)xLocation, (float)yLocation, TILE_HEIGHT, TILE_WIDTH);
 
+                        //If it is an animal tile then draw an orange rectangle.
                         if (theWorld.Map[i, j] == MapTile.Animal)
                         {
                             e.Graphics.FillRectangle(Brushes.Orange, tempRectangle);
                         }
+                        //If the tile is an enemy tile, then draw a red rectangle.
                         else if (theWorld.Map[i, j] == MapTile.Enemy)
                         {
                             e.Graphics.FillRectangle(Brushes.Red, tempRectangle);
                         }
+                        //If the tile is a heal station, then draw a pink tile.
                         else if (theWorld.Map[i, j] == MapTile.HealStn)
+                        {
+                            e.Graphics.FillRectangle(Brushes.HotPink, tempRectangle);
+                        }
+                        //If the tile is a shop, then draw a blue tile.
+                        else if (theWorld.Map[i, j] == MapTile.Shop)
                         {
                             e.Graphics.FillRectangle(Brushes.Blue, tempRectangle);
                         }
-                        else if (theWorld.Map[i, j] == MapTile.Shop)
-                        {
-                            e.Graphics.FillRectangle(Brushes.DarkGoldenrod, tempRectangle);
-                        }
+                        //If the tile is tall grass, then draw a dark green tile.
                         else if (theWorld.Map[i, j] == MapTile.TallGrass)
                         {
                             e.Graphics.FillRectangle(Brushes.DarkOliveGreen, tempRectangle);
                         }
+                        //If the tile is a filler tile (just a normal tile) or a start/end location then draw a lightgreen tile.
                         else if (theWorld.Map[i, j] == MapTile.Filler1 || theWorld.Map[i, j] == MapTile.StartLocation || theWorld.Map[i, j] == MapTile.EndLocation)
                         {
                             e.Graphics.FillRectangle(Brushes.LightGreen, tempRectangle);
                         }
+                        //If the tile is a filler tile (just a normal tile) then daw a Brown tile.
                         else if (theWorld.Map[i, j] == MapTile.Filler2)
                         {
                             e.Graphics.FillRectangle(Brushes.SandyBrown, tempRectangle);
                         }
 
-
-                        if (player.Column == i && player.Row == j)
+                        //If the current iteration of the nested for loops is at the player's location then draw the player.
+                        if (player.Column == j && player.Row == i)
                         {
-
+                            //Draw the player image from the file, onto the tile rectangle.
                             e.Graphics.DrawImage(Image.FromFile(Environment.CurrentDirectory + IMAGE_PATH + "Player\\" + player.FacingDirection.ToString() + ".png"), tempRectangle);
 
                         }
 
+                        //Advance the xLocation to the location of the next tile.
                         xLocation += TILE_WIDTH;
                     }
 
+                    //Reset the x location for every column.
                     xLocation = 0;
 
+                    //Advance the y location for every column.
                     yLocation += TILE_HEIGHT;
                 }
             }
+            //If the player is in a battle then continue
             else
             {
+                //Create rectangles to hold the enemy sprite and the player sprite. Puts them in the correct location as well
+                //Player sprite location is at the center on the left side.
+                //Enemy sprite location is at the top right corner.
                 RectangleF enemySprite = new RectangleF((float)ClientSize.Width - SPRITE_SIZE, (float)0, (float)SPRITE_SIZE, (float)SPRITE_SIZE);
                 RectangleF playerSprite = new RectangleF((float)0, (float)((ClientSize.Height / 2) - SPRITE_SIZE), (float)SPRITE_SIZE, (float)SPRITE_SIZE);
 
+                //If the player's animal is evolved then draw the correct back facing evolved animal based on its species onto the PlayerSprite rectangle.
                 if (player.Roster.First().IsEvolved)
                     e.Graphics.DrawImage(Image.FromFile(Environment.CurrentDirectory + IMAGE_PATH + player.Roster.First().Species.ToString() + "/BackViewEvolved.png"), playerSprite);
+                //Otherwise draw the correct back facing animal based on its species onto the PlayerSprite rectangle.
                 else
                     e.Graphics.DrawImage(Image.FromFile(Environment.CurrentDirectory + IMAGE_PATH + player.Roster.First().Species.ToString() + "/BackView.png"), playerSprite);
 
+                //If the enemy's animal is evolved then draw the correct front facing evolved animal based on its species onto the EnemySprite rectangle.
                 if (battle.EnemyAnimals.First().IsEvolved)
                     e.Graphics.DrawImage(Image.FromFile(Environment.CurrentDirectory + IMAGE_PATH + player.Roster.First().Species.ToString() + "/FrontViewEvolved.png"), playerSprite);
+                //Otherwise draw the correct front facing animal based on its species onto the EnemySprite rectangle.
                 else
                     e.Graphics.DrawImage(Image.FromFile(Environment.CurrentDirectory + IMAGE_PATH + player.Roster.First().Species.ToString() + "/FrontView.png"), playerSprite);
             }
