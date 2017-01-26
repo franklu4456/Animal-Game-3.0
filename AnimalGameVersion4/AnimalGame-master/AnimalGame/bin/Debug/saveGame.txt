@@ -1,0 +1,22 @@
+1
+1 1000
+2
+Attack Buff 1 5 Attack
+2
+Defense Buff 1 5 Defense
+2
+Speed Buff 1 2 Speed
+2
+Heal 1 30 Heal
+2
+Max Heal 1 1000 MaxHeal
+2
+Net 1 1 Catch
+3
+Grass 2 2 150 75 15 20
+4
+Grass EnemyStatDebuff PoisonIvy 0 Defense
+4
+Grass PlayerStatBuff Chyrsanthemum 0 Heal
+4
+Grass EnemyHealthDown Falling Branch 120
